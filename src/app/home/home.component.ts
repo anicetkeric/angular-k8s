@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { environment } from './../../environments/environment';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
+import { Book } from '../model/book.model';
 
 @Component({
   selector: 'app-home',
@@ -11,16 +13,16 @@ import { TableModule } from 'primeng/table';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  books: any[] = [];
-
-  constructor(private http: HttpClient) {}
+  books: Book[] = [];
+  private readonly apiUrl = `${environment.apiUrl}/book`;
+  private readonly http = inject(HttpClient);
 
   ngOnInit() {
     this.fetchBooks();
   }
 
   fetchBooks() {
-    this.http.get<any[]>('https://api.example.com/books').subscribe(data => {
+    this.http.get<Book[]>(this.apiUrl).subscribe(data => {
       this.books = data;
     });
   }
